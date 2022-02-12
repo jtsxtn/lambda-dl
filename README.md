@@ -37,4 +37,4 @@ The executable is named lambda-dl and it can put it anywhere on your PATH.
 
 ## Using lambda-dl
 
-Fire it up in a relatively big terminal window (confirmed works on st) and follow the promps to glory.
+Fire it up in a relatively big terminal window (confirmed to work on st) and follow the promps to glory.
