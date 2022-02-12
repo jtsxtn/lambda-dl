@@ -13,7 +13,7 @@ sudo pacman -Sy racket && raco pkg install html-parsing
 
 ```
 
-Note that raco is Racket's package manager and will automatically be installed when you install racket. You can then download this repository and create the executable by running the following command wherever you cloned this repo:
+Note that raco is Racket's package manager and will automatically be installed when you install racket. You can then download this repository and create the executable by running the following command in whatever directory you cloned this repo:
 
 ```
 
