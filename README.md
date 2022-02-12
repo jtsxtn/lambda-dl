@@ -37,4 +37,4 @@ The executable is named lambda-dl and it can put it anywhere on your PATH.
 
 ## Using lambda-dl
 
-Fire it up in a relatively big terminal window (confirmed to work on st) and follow the promps to glory.
+Fire it up in a relatively big terminal window (confirmed to work on st) and follow the promps to glory. The songs will be in ~/Media/Musique (an easy way to customize it will be provided soon). We beleive in a data lake approach to library management; having all your song in the same folder with names following a simple convention allows for compatibility with any music player. By default, songs are saved as artist--album--number--title.opus (an easy way to customize both the file format and the song format will be provided soon)
