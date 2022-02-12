@@ -3,7 +3,7 @@
 
 This is a command line tool with a curses-like interface to quickly build a music library for offline enjoyment. This software is written in Racket with a very Scheme-ish style. There is a lot of refactoring left to do, and the code messy, but the software works well.
 
-### Installation
+# Installation
 
 Racket allows for some very nice cross-platform distribution. However, for now, only instructions for Arch based Linux distributions are provided.
 
