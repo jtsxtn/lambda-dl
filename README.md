@@ -1,4 +1,4 @@
-# lambda-dl
+# &lambda-dl
 ## About
 
 This is a command line tool with a curses-like interface to quickly build a music library for offline enjoyment.
