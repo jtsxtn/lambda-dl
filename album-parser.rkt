@@ -5,7 +5,13 @@
 (provide extract-tracklist
          extract-tracklist-review
          confirm-dl-rename
+         confirm-dl
+         get-option
          get-artiste)
+
+(define name-from-wiki
+  (lambda (l)
+    (string-replace l "https://en.wikipedia.org/wiki/" "")))
 
 
 (define (get-option [prompt "-> "] #:default [default "Y"])
@@ -35,6 +41,10 @@
   (get-option
    (string-append "Download " l "? [Y/n/all] ")))
 
+(define (get-option-dl-2 l)
+  (get-option
+   (string-append "Download " (name-from-wiki l) " [y/N/done/songs]? ")))
+
 (define (get-option-pre-dl)
   (get-option-2 "Download all songs as-is? [Y/n] "))
 
@@ -46,9 +56,43 @@
   (get-option
    (string-append "Download " l "? [Y/n/rename/all] ")))
 
+(define confirm-dl
+  (lambda (links show-func)
+    (define temp-l (lambda (links) (if (null? links) '() (get-option-dl-2 (car links)))))
+    (define temp (temp-l links))
+    (cond
+      ((null? links) '())
+      ((string=?  temp "y") (show-func)
+       (cons
+        (car links)
+        (confirm-dl (cdr links) show-func)))
+      ((string=? temp "songs")
+       (printf "~nSongs:~n")
+       (map (lambda (a) (printf "~a~n" a)) (extract-tracklist-review (load-sxml (car links))))
+       (printf "~nPress Enter to continue")
+       (read-line)
+       (show-func)
+       (confirm-dl links show-func))
+      (else
+       (cond
+         ((string=? temp "done") '())
+         (else (show-func) (confirm-dl (cdr links) show-func)))))))
+
+(define rename-albums
+  (lambda (names)
+    (cond
+      ((null? names) '())
+      ((string=? (get-option-name (car names)) "N") (clean-up)
+       (cons (car names) (rename-albums (cdr names))))
+      (else (clean-up)
+       (cons
+        (get-new-name (car names))
+        (rename-albums (cdr names))
+        )))))
+
 (define get-new-name
   (lambda (name)
-    (printf "\033[sNew name for ~a -> " name)
+    (printf "New name for ~a -> " name)
     (let ([in (read-line)])
       (cond
         ((string=? in "") (clean-up) (get-new-name name))

@@ -3,6 +3,7 @@
 (provide print-progress
          print-dots
          print-dots-cont
+         print-logo-cont
          show)
 
 (define logo "⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣠⣤⣤⣴⣦⣤⣤⣄⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -21,13 +22,38 @@
 ⠀⠀⠀⠀⠀⠀⠈⠛⠿⣿⣿⣿⣿⣿⣶⣶⣿⣿⣿⣿⣿⠿⠋⠁⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠛⠛⠛⠛⠛⠛⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀")
 
+(define logo2 "⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣠⣤⣤⣴⣦⣤⣤⣄⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⢀⣤⣾⣿⣿⣿⣿⠿⠿⠿⠿⣿⣿⣿⣿⣶⣤⡀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⣠⣾⣿⣿⡿⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⢿⣿⣿⣶⡀⠀⠀⠀⠀
+⠀⠀⠀⣴⣿⣿⠟⠁⠀⠀⠀ ⣶⣶⣶⡆⠀⠀⠀⠀⠀⠀⠈⠻⣿⣿⣦⠀⠀⠀
+⠀⠀⣼⣿⣿⠋⠀⠀⠀⠀⠀  ⢻⣿⣿⡀⠀⠀⠀⠀⠀⠀⠀⠙⣿⣿⣧⠀⠀
+⠀⢸⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⢀⣿⣿⣷⠀⠀⠀⠀⠀⠀⠀⠀⠸⣿⣿⡇⠀
+⠀⣿⣿⡿⠀⠀⠀⠀⠀⠀⠀⠀⢀⣾⣿⣿⣿⣇⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⠀
+⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⢠⣿⣿⡟⢹⣿⣿⡆⠀⠀⠀⠀⠀⠀⠀⣹⣿⣿⠀
+⠀⣿⣿⣷⠀⠀⠀⠀⠀⠀⣰⣿⣿⠏⠀⠀⢻⣿⣿⡄⠀⠀⠀⠀⠀⠀⣿⣿⡿⠀
+⠀⢸⣿⣿⡆⠀⠀⠀⠀⣴⣿⡿⠃⠀⠀⠀⠈⢿⣿⣷   ⠀⠀⣰⣿⣿⠇⠀
+⠀⠀⢻⣿⣿⣄⠀⠀⠀⠀⠀⠀⠀          ⠀⣰⣿⣿⡟⠀⠀
+⠀⠀⠀⠻⣿⣿⣧  Please Wait ⠀⣠⣾⣿⣿⠏⠀⠀⠀
+⠀⠀⠀⠀⠈⠻⣿⣿⣷⣤⣄       ⢀⣠⣴⣾⣿⣿⠟⠁⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠈⠛⠿⣿⣿⣿⣿⣿⣶⣶⣿⣿⣿⣿⣿⠿⠋⠁⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠛⠛⠛⠛⠛⠛⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀")
+
 (define (print-logo [l logo]) (printf "~a~n~n" l))
+(define (print-logo-2 [l logo2]) (printf "~a~n~n" logo2))
 (define (clear-all) (printf "\033[2J\033[H"))
 (define (set-color color) (printf "~a" color))
 (define green "\033[33m")
 (define yellow "\033[34m")
 (define red "\033[36m")
 
+
+(define print-logo-cont
+  (lambda ([n 0])
+    (printf "\033[2J\033[H")
+    (printf "\033[38;5;~am" (+ 190 (modulo n 30)))
+    (print-logo-2)
+    (sleep 0.5)
+    (print-logo-cont (add1 n))))
 
 (define show
   (lambda ([artiste #f] [albums #f] )
