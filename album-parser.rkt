@@ -7,6 +7,7 @@
          confirm-dl-rename
          confirm-dl
          get-option
+         rename-albums
          get-artiste)
 
 (define name-from-wiki
@@ -50,7 +51,7 @@
 
 (define (get-option-re l)
   (get-option
-   (string-append "Review songs from " l "? [y/N] ") #:default "N"))
+   (string-append "\033[36m\nReview tracklists:\n\n\033[34mReview songs from " l "? [y/N] ") #:default "N"))
 
 (define (get-option-dlre l)
   (get-option
@@ -90,6 +91,14 @@
         (rename-albums (cdr names))
         )))))
 
+(define get-artiste
+  (lambda ()
+    (printf "Name of band or artist -> ")
+    (let ([in (read-line)])
+      (cond
+        ((string=? in "") (get-artiste))
+        (else in)))))
+
 (define get-new-name
   (lambda (name)
     (printf "New name for ~a -> " name)
@@ -98,20 +107,20 @@
         ((string=? in "") (clean-up) (get-new-name name))
         (else (clean-up) in)))))
 
-(define confirm-dl
-  (lambda (names)
-    (define temp-l (lambda (names) (if (null? names) '() (get-option-dl (car names)))))
-    (define temp (temp-l names))
-    (cond
-      ((null? names) '())
-      ((string=?  temp "Y")
-       (cons
-        (car names)
-        (confirm-dl (cdr names))))
-      (else
-       (if (string=? temp "all")
-           names
-           (confirm-dl (cdr names)))))))
+;; (define confirm-dl
+;;   (lambda (names)
+;;     (define temp-l (lambda (names) (if (null? names) '() (get-option-dl (car names)))))
+;;     (define temp (temp-l names))
+;;     (cond
+;;       ((null? names) '())
+;;       ((string=?  temp "Y")
+;;        (cons
+;;         (car names)
+;;         (confirm-dl (cdr names))))
+;;       (else
+;;        (if (string=? temp "all")
+;;            names
+;;            (confirm-dl (cdr names)))))))
 
 (define confirm-dl-rename
   (lambda (names)
@@ -138,14 +147,14 @@
        (printf "~n~a songs:~n" album)
        (map (lambda (a) (printf "~a~n" a)) names)
        (cond
-         ((string=? (get-option-pre-dl) "n") show-func (confirm-dl-rename names))
-         (else show-func names)))
-      (else show-func names))))
+         ((string=? (get-option-pre-dl) "n") (show-func) (confirm-dl-rename names))
+         (else (show-func) names)))
+      (else (show-func) names))))
 
 ;; Gets the artist's name from album page
-(define get-artiste
-  (lambda (w)
-    (car (cdr (car (multstart-with-tag* w '(table div title)))))))
+;; (define get-artiste
+;;   (lambda (w)
+;;     (car (cdr (car (multstart-with-tag* w '(table div title)))))))
 
 (define extract-table
   (lambda (w)

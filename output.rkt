@@ -4,6 +4,7 @@
          print-dots
          print-dots-cont
          print-logo-cont
+         print-logo
          show)
 
 (define logo "⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣠⣤⣤⣴⣦⣤⣤⣄⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
