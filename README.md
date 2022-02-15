@@ -32,7 +32,7 @@ This software depends on yt-dlp (a fork of youtube-dl, which has throttling issu
 
 ```
 
-sudo apt-get install yt-dlp && racket && raco pkg install html-parsing
+sudo apt-get install yt-dlp racket && raco pkg install html-parsing
 
 ```
 
