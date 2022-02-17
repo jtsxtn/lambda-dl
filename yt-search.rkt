@@ -20,7 +20,7 @@
       (string-replace toune " " "+")
       "+"
     (string-replace artiste " " "+")
-    "+Album+Version")))
+    "+Audio")))
 
 
 (define yt-regexp
