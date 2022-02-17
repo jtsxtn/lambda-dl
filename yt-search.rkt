@@ -22,9 +22,6 @@
       (string-replace toune " " "+")
       "+Audio")))
 
-(define keep-common
-  (lambda (lat1 lat2)))
-
 (define yt-regexp
   (lambda (y)
     (cond
