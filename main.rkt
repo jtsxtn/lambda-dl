@@ -29,9 +29,6 @@
     (printf "\033[34m")    
     (define album-names (rename-albums (get-albums-names  album-links)))
     (show artiste album-names)
-    ;; (printf "\033[36m")
-    ;; (printf "~nReview tracklists:~n~n")
-    ;; (printf "\033[34m")
     (define tracklists (map (lambda (a b) (extract-tracklist a b (lambda () (show artiste album-names)))) (map load-sxml album-links) album-names))
     (cond
       ((null? discography) (printf "Could not extract discography from Wikipedia~n"))

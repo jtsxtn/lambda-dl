@@ -15,13 +15,12 @@
 
 (define build-yt-search
   (lambda (toune artiste)
-    (string-append
      (string-append
       YT-SEARCH
-      (string-replace toune " " "+"))
-     (string-append
+      (string-replace toune " " "+")
       "+"
-      (string-replace artiste " " "+")))))
+    (string-replace artiste " " "+")
+    "+Album+Version")))
 
 
 (define yt-regexp
