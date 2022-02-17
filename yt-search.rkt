@@ -22,6 +22,8 @@
       (string-replace toune " " "+")
       "+Audio")))
 
+(define keep-common
+  (lambda (lat1 lat2)))
 
 (define yt-regexp
   (lambda (y)
@@ -38,10 +40,12 @@
 
 (define get-yt-link
   (lambda (toune artiste)
-    (define temp (yt-regexp (flatten (load-sxml (build-yt-search toune artiste)))))
+    (define temp1 (yt-regexp (flatten (load-sxml (build-yt-search toune artiste)))))
+    (define temp2 (yt-regexp (flatten (load-sxml (build-yt-search toune artiste)))))
+    (define temp (filter (lambda (a) (member?* a temp1)) temp2))
     (cond
-      ((null? (cdr temp)) '())
-      (else (build-yt-link (car (cdr temp))))
+      ((null? temp) '())
+      (else (build-yt-link (car temp)))
       )))
 
 (define get-first-link
