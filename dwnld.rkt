@@ -37,23 +37,7 @@
     (define temp (read port))
     (cond
       ((eof-object? temp) (close-input-port port) (close-input-port porterr) (close-output-port portin))
-      ((or (list? temp) (number? temp) (string? temp)) (mon-read title port portin porterr))
-      ((regexp-match #rx"[0-9][0-9][0-9]*\\.[0-9]\\%" (symbol->string temp)) (println (string-join (list title (car (regexp-match #rx"[0-9][0-9][0-9]*\\.[0-9]\\%" (symbol->string temp)))))) (mon-read title port portin porterr))
       (else (mon-read title port portin porterr)))))
-
-(define mon-read-2
-  (lambda (title port portin porterr)
-    (define temp (read port))
-    (cond
-      ((eof-object? temp) (println (string-join (list title "fini"))) (close-input-port port) (close-input-port porterr) (close-output-port portin))
-      (else (mon-read-2 title port portin porterr)))))
-
-(define mon-read-3
-  (lambda (title port portin porterr)
-    (define temp (read port))
-    (cond
-      ((eof-object? temp) (close-input-port port) (close-input-port porterr) (close-output-port portin))
-      (else (mon-read-3 title port portin porterr)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (define download-song
@@ -62,7 +46,7 @@
   (define-values (sp out in err)
     ;(subprocess #f #f #f "/bin/youtube-dl" "-i" "-c" "-x" "--audio-format" "opus" lien "-o" new-titre)
     (subprocess #f #f #f "/bin/yt-dlp" "-i" "-c" "-x" "--audio-format" "opus" lien "-o" new-titre))
-    (thread (lambda () (mon-read-3 titre out in err)))))
+    (thread (lambda () (mon-read titre out in err)))))
 
 (define download-all-songs
   (lambda (liens titres album artiste [n 1])
