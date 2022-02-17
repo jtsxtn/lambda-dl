@@ -17,10 +17,10 @@
   (lambda (toune artiste)
      (string-append
       YT-SEARCH
-      (string-replace toune " " "+")
+      (string-replace artiste " " "+")
       "+"
-    (string-replace artiste " " "+")
-    "+Audio")))
+      (string-replace toune " " "+")
+      "+Audio")))
 
 
 (define yt-regexp
