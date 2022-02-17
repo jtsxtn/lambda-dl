@@ -6,8 +6,8 @@
 
 (define YT "https://www.youtube.com/watch?v=")
 (define YT-SEARCH "https://www.youtube.com/results?search_query=")
-(define RXYT #rx"\"videoId\":\"[A-Za-z0-9]+\"")
-(define RXYT-MATCH #rx"\"videoId\":\"([A-Za-z0-9]+)\"")
+(define RXYT #rx"\"videoId\":\"[A-Za-z0-9_]+\"")
+(define RXYT-MATCH #rx"\"videoId\":\"([A-Za-z0-9_]+)\"")
 
 (define build-yt-link 
   (lambda (lien)
