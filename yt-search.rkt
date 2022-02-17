@@ -40,8 +40,8 @@
   (lambda (toune artiste)
     (define temp (yt-regexp (flatten (load-sxml (build-yt-search toune artiste)))))
     (cond
-      ((null? temp) '())
-      (else (build-yt-link (car temp)))
+      ((null? (cdr temp)) '())
+      (else (build-yt-link (car (cdr temp))))
       )))
 
 (define get-first-link
