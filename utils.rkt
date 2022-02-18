@@ -7,7 +7,10 @@
          member?*
          rx-member?*
          get-string
-         get-string-2)
+         get-string-2
+         name-from-wiki
+         get-artiste)
+
 
 
 ;; Sweet sweet Little Schemer
@@ -80,3 +83,15 @@
           (cadr (regexp-match #px"\"(.*)\"" (car lat)))  "\"")))
        (string-trim (cadr (regexp-match #px"\"(.*)\"" (car lat)))))
       (else (get-string-2 (cdr lat))))))
+
+(define name-from-wiki
+  (lambda (l)
+    (string-replace l "https://en.wikipedia.org/wiki/" "")))
+
+(define get-artiste
+  (lambda ()
+    (printf "Name of band or artist -> ")
+    (let ([in (read-line)])
+      (cond
+        ((string=? in "") (get-artiste))
+        (else in)))))

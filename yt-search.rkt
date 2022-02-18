@@ -1,6 +1,5 @@
 #lang racket
-(require "utils.rkt"
-         "album-parser.rkt")
+(require "utils.rkt")
 
 (provide get-track-links)
 
@@ -44,10 +43,6 @@
       ((null? temp) '())
       (else (build-yt-link (car temp)))
       )))
-
-(define get-first-link
-  (lambda (w)
-    (get-yt-link (car (extract-tracklist w)) (get-artiste w))))
 
 (define get-track-links
   (lambda (tracks artiste)

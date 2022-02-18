@@ -1,12 +1,10 @@
 #lang racket
-(require "album-parser.rkt"
-         "yt-search.rkt"
+(require "yt-search.rkt"
          "utils.rkt")
 
 (provide MUSIC_DIR
          download-all-songs
-         download-all-2
-         download-all*)
+         download-all)
 
 (define MUSIC_DIR "/home/tom/Media/Musique/")
 
@@ -51,7 +49,6 @@
 (define download-all-songs
   (lambda (liens titres album artiste [n 1])
     (cond
-      ;((null? liens) (printf "Starting download: ~a~n" album) '())
       ((null? liens) '())
       (else
        (cons
@@ -59,19 +56,5 @@
         (download-all-songs (cdr liens) (cdr titres) album artiste (add1 n)))))))
 
 (define download-all
-  (lambda (w album artiste)
-    (define t (extract-tracklist w))
-    (download-all-songs (get-track-links t artiste) t album artiste)))
-
-(define download-all-2
   (lambda (tracklist album artiste)
      (download-all-songs (get-track-links tracklist artiste) tracklist album artiste)))
-
-(define download-all*
-  (lambda (lat albums a)
-    (cond
-      ((null? lat) '())
-      (else
-       (cons
-        (download-all (load-sxml (car lat)) (car albums) a)
-        (download-all* (cdr lat) (cdr albums) a))))))

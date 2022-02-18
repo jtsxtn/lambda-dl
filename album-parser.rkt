@@ -2,159 +2,10 @@
 (require "xml-parser.rkt"
          "utils.rkt")
 
-(provide extract-tracklist
-         extract-tracklist-review
-         confirm-dl-rename
-         confirm-dl
-         get-option
-         rename-albums
-         get-artiste)
+(provide extract-tracklist)
 
-(define name-from-wiki
-  (lambda (l)
-    (string-replace l "https://en.wikipedia.org/wiki/" "")))
+(define MIN_ALBUM_LENGTH 3)
 
-
-(define (get-option [prompt "-> "] #:default [default "Y"])
-  (printf "\033[s~a" prompt)
-  (let ([in (read-line)])
-    (if (string=? in "")
-        default
-        in)))
-
-(define (get-option-2 [prompt "-> "] #:default [default "Y"])
-  (printf "~a" prompt)
-  (let ([in (read-line)])
-    (if (string=? in "")
-        default
-        in)))
-
-(define clean-up
-  (lambda ()
-    (printf "\033[u\033[0J")))
-
-(define (get-option-name l)
-  (get-option
-   (string-append "Rename " l " [y/N]? ")
-   #:default "N"))
-
-(define (get-option-dl l)
-  (get-option
-   (string-append "Download " l "? [Y/n/all] ")))
-
-(define (get-option-dl-2 l)
-  (get-option
-   (string-append "Download " (name-from-wiki l) " [y/N/done/songs]? ")))
-
-(define (get-option-pre-dl)
-  (get-option-2 "Download all songs as-is? [Y/n] "))
-
-(define (get-option-re l)
-  (get-option
-   (string-append "\033[36m\nReview tracklists:\n\n\033[34mReview songs from " l "? [y/N] ") #:default "N"))
-
-(define (get-option-dlre l)
-  (get-option
-   (string-append "Download " l "? [Y/n/rename/all] ")))
-
-(define confirm-dl
-  (lambda (links show-func)
-    (define temp-l (lambda (links) (if (null? links) '() (get-option-dl-2 (car links)))))
-    (define temp (temp-l links))
-    (cond
-      ((null? links) '())
-      ((string=?  temp "y") (show-func)
-       (cons
-        (car links)
-        (confirm-dl (cdr links) show-func)))
-      ((string=? temp "songs")
-       (printf "~nSongs:~n")
-       (map (lambda (a) (printf "~a~n" a)) (extract-tracklist-review (load-sxml (car links))))
-       (printf "~nPress Enter to continue")
-       (read-line)
-       (show-func)
-       (confirm-dl links show-func))
-      (else
-       (cond
-         ((string=? temp "done") '())
-         (else (show-func) (confirm-dl (cdr links) show-func)))))))
-
-(define rename-albums
-  (lambda (names)
-    (cond
-      ((null? names) '())
-      ((string=? (get-option-name (car names)) "N") (clean-up)
-       (cons (car names) (rename-albums (cdr names))))
-      (else (clean-up)
-       (cons
-        (get-new-name (car names))
-        (rename-albums (cdr names))
-        )))))
-
-(define get-artiste
-  (lambda ()
-    (printf "Name of band or artist -> ")
-    (let ([in (read-line)])
-      (cond
-        ((string=? in "") (get-artiste))
-        (else in)))))
-
-(define get-new-name
-  (lambda (name)
-    (printf "New name for ~a -> " name)
-    (let ([in (read-line)])
-      (cond
-        ((string=? in "") (clean-up) (get-new-name name))
-        (else (clean-up) in)))))
-
-;; (define confirm-dl
-;;   (lambda (names)
-;;     (define temp-l (lambda (names) (if (null? names) '() (get-option-dl (car names)))))
-;;     (define temp (temp-l names))
-;;     (cond
-;;       ((null? names) '())
-;;       ((string=?  temp "Y")
-;;        (cons
-;;         (car names)
-;;         (confirm-dl (cdr names))))
-;;       (else
-;;        (if (string=? temp "all")
-;;            names
-;;            (confirm-dl (cdr names)))))))
-
-(define confirm-dl-rename
-  (lambda (names)
-    (define temp-l (lambda (names) (if (null? names) '() (get-option-dlre (car names)))))
-    (define temp (temp-l names))
-    (cond
-      ((null? names) '())
-      ((string=?  temp "Y") (clean-up)
-       (cons
-        (car names)
-        (confirm-dl-rename (cdr names))))
-      ((string=? temp "rename") (clean-up)
-                                (cons
-                                 (get-new-name (car names))
-                                 (confirm-dl-rename (cdr names))))
-      ((string=? temp "all") (clean-up) names)
-      (else (clean-up)(confirm-dl-rename (cdr names))))))
-
-(define pre-confirm-dl
-  (lambda (names album show-func)
-    (define temp (get-option-re album))
-    (cond
-      ((string=? temp "y")
-       (printf "~n~a songs:~n" album)
-       (map (lambda (a) (printf "~a~n" a)) names)
-       (cond
-         ((string=? (get-option-pre-dl) "n") (show-func) (confirm-dl-rename names))
-         (else (show-func) names)))
-      (else (show-func) names))))
-
-;; Gets the artist's name from album page
-;; (define get-artiste
-;;   (lambda (w)
-;;     (car (cdr (car (multstart-with-tag* w '(table div title)))))))
 
 (define extract-table
   (lambda (w)
@@ -174,7 +25,9 @@
 
 (define extract-songlist
   (lambda (w)
-    (start-with-tag-countain-rx* (start-with-tag* w 'ol) 'li #px"[0-9]:[0-9][0-9]")))
+    (start-with-tag-countain-rx*
+     (start-with-tag* w 'ol)
+     'li #px"[0-9]:[0-9][0-9]")))
 
 (define extract-tracklist-songlist
   (lambda (w)
@@ -202,35 +55,35 @@
         (get-string (caar temp))
         (extract-tracklist-special (cdr temp)))))))
 
-
-(define remove-non-strings
+(define tracklist?
   (lambda (lat)
-    (cond
-      ((null? lat) '())
-      ((string? (car lat))
-       (cons
-        (car lat)
-        (remove-non-strings (cdr lat))))
-      (else (remove-non-strings (cdr lat))))))
+    (and
+     (not (null? lat))
+     (< MIN_ALBUM_LENGTH (length lat)))))
 
-(define extract-tracklist
-  (lambda (w album show-func)
-    (cond
-      ((not (null? (x-tracklist-special w)))
-       (pre-confirm-dl (remove-duplicates (remove* '("^")(x-tracklist-special w))) album show-func))
-      (else (if
-     (null? (extract-tracklist-table w))
-     (pre-confirm-dl (remove-non-strings (remove-duplicates (remove* '("^") (extract-tracklist-songlist w)))) album show-func)
-     (pre-confirm-dl (remove-non-strings (remove-duplicates (remove* '("^") (extract-tracklist-table w)))) album show-func))))))
-
-(define extract-tracklist-review
+(define extract-tracklist-raw
   (lambda (w)
     (cond
-      ((not (null? (x-tracklist-special w)))
-       (remove-duplicates (remove* '("^")(x-tracklist-special w))))
-      (else (if (null? (extract-tracklist-table w))
-             (remove-non-strings (remove-duplicates (remove* '("^") (extract-tracklist-songlist w))))
-             (remove-non-strings (remove-duplicates (remove* '("^") (extract-tracklist-table w))))
-             )))))
+      ((tracklist? (x-tracklist-special w)) (x-tracklist-special w))
+      (else (if
+     (null? (extract-tracklist-table w))
+     (extract-tracklist-songlist w)
+     (extract-tracklist-table w))))))
+
+(define clean-tracklist
+  (lambda (lat)
+   (remove-duplicates
+    (remove*
+     '("^")
+     (filter string? lat)))))
+
+(define extract-tracklist
+  (lambda (w)
+    (clean-tracklist (extract-tracklist-raw w))))
+
+;; (define extract-tracklist
+;;   (lambda (w album show-func)
+;;     (define tracks (extract-tracklist-standard w))
+;;     (pre-confirm-dl tracks album show-func)))
 
 

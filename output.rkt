@@ -1,10 +1,8 @@
 #lang racket
 
 (provide print-progress
-         print-dots
          print-dots-cont
          print-logo-cont
-         print-logo
          show)
 
 (define logo "⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣠⣤⣤⣴⣦⣤⣤⣄⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -88,15 +86,16 @@
 
 (define print-dots
   (lambda (n [max 4])
-    (printf "\033[1F\033[2K\033[38;5;~am" (+ 190 (modulo n 30)))
-    (printf "Downloading album(s)~a~n" (make-string  (modulo n max) #\.))
+    (printf "\033[38;5;~am" (+ 190 (modulo n 30)))
+    (printf "~n~nDownloading album(s)~a~n" (make-string  (modulo n max) #\.))
     ))
 
 (define print-dots-cont
-  (lambda ([n 0])
+  (lambda (show-func [n 0])
+    (show-func)
     (print-dots n)
     (sleep 0.5)
-    (print-dots-cont (add1 n))))
+    (print-dots-cont show-func (add1 n))))
 
 
 (define print-progress
