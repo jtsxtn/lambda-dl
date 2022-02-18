@@ -3,6 +3,8 @@
 (provide get-albums-names
          get-albums-links)
 
+(define WIKI "https://en.wikipedia.org")
+
 (define get-albums-table
   (lambda (xexp)
     (define temp (remove-duplicates (multstart-with-tag* xexp '(tr th i a @ href))))
@@ -17,7 +19,7 @@
       ((null? albums) '())
       (else
        (cons
-        (string-append "https://en.wikipedia.org" (car (cdr (car albums))))
+        (string-append  WIKI (car (cdr (car albums))))
         (get-table-links (cdr albums)))))))
 
 (define get-table-names
