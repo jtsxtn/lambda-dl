@@ -6,7 +6,9 @@ This is a command line tool with a curses-like interface to quickly build a musi
 
 # Installation
 
-Racket allows for some very nice cross-platform distribution. However, for now, only instructions for Arch based Linux and Ubuntu distributions are provided.
+ 
+Racket allows for some very nice cross-platform distribution. However, for now, only instructions for Arch based Linux and Ubuntu distributions are provided. 
+
 
 ## Installation (Arch based distros)
 
@@ -26,7 +28,18 @@ sudo pacman -Sy racket && raco pkg install html-parsing
 
 ```
 
-## Installation (Ubuntu based distros)
+## Automatic installation (Ubuntu based distros)
+
+For Ubuntu distributions, you can use the installation script with this simple commands
+
+```
+
+wget -O - https://raw.githubusercontent.com/jtsxtn/lambda-dl/main/scripts/ubuntu.sh | bash
+
+```
+
+
+## Manual installation (Ubuntu based distros)
 
 This software depends on yt-dlp (a fork of youtube-dl, which has throttling issues absent in yt-dlp), racket and html-parsing.
 
