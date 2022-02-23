@@ -1,31 +1,27 @@
 #!/bin/bash
 
+inform () {
+  echo ''
+  echo " *** $1 *** "
+  echo ''
+}
+
 #Install depedencies
-echo ''
-echo " ***  Installing depedencies  *** "
-echo ''
+inform "Installing depedencies"
 sudo apt-get -y install git yt-dlp racket && raco pkg install html-parsing
-echo ''
 
 #Clone lambda-dl repo
-echo " ***  Cloning repo  *** "
-echo ''
+inform "Cloning repo"
 git clone https://github.com/jtsxtn/lambda-dl.git
-echo ''
 
 #Build the project
-echo " ***  Building project  *** "
-echo ''
+inform "Building project"
 cd lambda-dl
 raco exe -o lambda-dl main.rkt
-echo ''
 
 #Setting path
-echo " *** Setting path *** "
-echo ''
+inform "Setting path"
 echo "PATH=$PATH:$(pwd)" | sudo tee -a ~/.profile
-echo ''
 
-echo "$(tput setaf 2)  ***  Installation completed  *** "
-echo ''
-echo "Run $(tput setaf 1)source ~/.profile $(tput setaf 2)to activate the new path."
+inform "$(tput setaf 2) Installation completed $(tput setaf 7)"
+echo "Run $(tput setaf 1)source ~/.profile $(tput setaf 7)to activate the new path."
