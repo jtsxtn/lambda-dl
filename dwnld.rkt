@@ -6,7 +6,7 @@
          download-all-songs
          download-all)
 
-(define MUSIC_DIR "/home/tom/Media/Musique/")
+(define MUSIC_DIR "~/Media/Musique/")
 
 
 ;; Yuge Mess, needs more flexibility
@@ -43,7 +43,7 @@
     (define new-titre (format-song titre album artiste n))
   (define-values (sp out in err)
     ;(subprocess #f #f #f "/bin/youtube-dl" "-i" "-c" "-x" "--audio-format" "opus" lien "-o" new-titre)
-    (subprocess #f #f #f "/bin/yt-dlp" "-i" "-c" "-x" "--audio-format" "opus" lien "-o" new-titre))
+    (subprocess #f #f #f (find-executable-path "yt-dlp")"-i" "-c" "-x" "--audio-format" "opus" lien "-o" new-titre))
     (thread (lambda () (mon-read titre out in err)))))
 
 (define download-all-songs
