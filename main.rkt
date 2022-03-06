@@ -1,4 +1,3 @@
-#! /usr/bin/racket
 #lang racket
 (require "g-search.rkt"
          "album-parser.rkt"
